@@ -1,0 +1,25 @@
+name: Auto Create Directory Structure
+on:
+  workflow_dispatch:
+
+jobs:
+  create-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/system-setup   # pastikan branch ini sudah ada
+      - name: Create Directories and Files
+        run: |
+          # mkdir sesuai struktur final
+          mkdir -p .github/ISSUE_TEMPLATE .github/workflows .github/scripts docs hooks infra/backup infra/drain infra/monitoring infra/terraform src/apps_script/admin src/apps_script/core src/apps_script/lib src/nodejs/services src/nodejs/utils tests/unit tests/integration tests/e2e scripts
+          # touch file sesuai daftar Anda
+          touch .github/CODEOWNERS .github/ISSUE_TEMPLATE/bug_report.yml ...
+          echo "# Structure created automatically" >> README.md
+      - name: Commit and Push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "chore: automated directory structure setup"
+          git push origin feature/system-setup
